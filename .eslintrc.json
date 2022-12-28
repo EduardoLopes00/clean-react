@@ -1,10 +1,14 @@
 {
-    "extends": "standard-with-typescript",
+    "extends": ["eslint:recommended",
+    "plugin:react/recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:jest/recommended"],
     "parserOptions": {
         "project": "./tsconfig.json"
     },
     "rules": {
         "@typescript-eslint/consistent-type-definition": "off",
-        "@typescript-eslint/strict-boolean-expression": "off"
+        "@typescript-eslint/strict-boolean-expression": "off",
+        "@typescript-eslint/prefer-interface": "off"
     }
 }
