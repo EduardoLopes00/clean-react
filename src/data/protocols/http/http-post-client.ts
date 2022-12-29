@@ -1,4 +1,8 @@
+export type HttpPostParams = {
+  url: string;
+};
+
+//Using the Interface Segregation SOLID principle.
 export interface HttpPostClient {
-  //Using the Interface Segregation SOLID principle.
-  post(url: string): Promise<void>;
+  post(params: HttpPostParams): Promise<void>;
 }
