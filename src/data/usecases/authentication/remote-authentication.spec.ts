@@ -1,5 +1,6 @@
 import { HttpPostClientSpy } from "src/data/test/mock-http-client";
 import { RemoteAuthentication } from "./remote-authentication";
+import { mockAuthentication } from "src/domain/test/mock-authentication";
 import { faker } from "@faker-js/faker";
 
 interface SutTypes {
@@ -21,8 +22,18 @@ describe("RemoteAuthentication", () => {
     const url = faker.internet.url();
 
     const { sut, httpPostClientSpy } = makeSut(url);
-    await sut.auth();
+    await sut.auth(mockAuthentication());
 
     expect(httpPostClientSpy.url).toBe(url);
+  });
+
+  test("Should call HttpPostClient with correct body", async () => {
+    const { sut, httpPostClientSpy } = makeSut();
+
+    const authenticationParams = mockAuthentication();
+
+    await sut.auth(authenticationParams);
+
+    expect(httpPostClientSpy.body).toEqual(authenticationParams); //toEqual is used to compare object values. toBe would compare its ponters.
   });
 });
