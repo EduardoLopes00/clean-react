@@ -1,5 +1,6 @@
 export type HttpPostParams = {
   url: string;
+  body?: object;
 };
 
 //Using the Interface Segregation SOLID principle.
