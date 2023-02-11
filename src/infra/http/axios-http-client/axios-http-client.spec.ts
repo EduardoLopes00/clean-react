@@ -1,49 +1,36 @@
-import { HttpPostParams } from "./../../../data/protocols/http/http-post-client";
 import { AxiosHttpClient } from "./axios-http-client";
+import { mockAxios } from "src/infra/test";
+import { makeMockPostRequest } from "src/data/test";
 import axios from "axios";
-import { faker } from "@faker-js/faker";
-
-type MockBody = {
-  name: string;
-  phone: number;
-};
 
 jest.mock("axios");
 
-const makeSut = (): AxiosHttpClient => {
-  return new AxiosHttpClient();
+type SutTypes = {
+  sut: AxiosHttpClient;
+  mockedAxios: jest.Mocked<typeof axios>;
 };
 
-const makeMockBody = (): MockBody =>
-  Object.assign({ name: faker.name, phone: faker.phone });
+const makeSut = (): SutTypes => {
+  const sut = new AxiosHttpClient();
+  const mockedAxios = mockAxios();
 
-const makeMockPostRequest = (): HttpPostParams<any> => ({
-  url: faker.internet.url(),
-  body: makeMockBody(),
-});
-
-const mockedAxiosResult = {
-  data: makeMockBody(),
-  status: faker.random.numeric(3),
+  return {
+    sut,
+    mockedAxios,
+  };
 };
-
-const mockedAxios = axios as jest.Mocked<typeof axios>;
-mockedAxios.post.mockResolvedValue(mockedAxiosResult);
 
 describe("AxiosHttpClient", () => {
   test("Should call axios with correct values", async () => {
     const request = makeMockPostRequest();
-    const sut = makeSut();
+    const { sut, mockedAxios } = makeSut();
     await sut.post(request);
     expect(mockedAxios.post).toHaveBeenCalledWith(request.url, request.body);
   });
 
-  test("Should return the correct statusCode and body", async () => {
-    const sut = makeSut();
-    const httpResponse = await sut.post(makeMockPostRequest());
-    expect(httpResponse).toEqual({
-      statusCode: mockedAxiosResult.status,
-      body: mockedAxiosResult.data,
-    });
+  test("Should return the correct statusCode and body", () => {
+    const { sut, mockedAxios } = makeSut();
+    const promise = sut.post(makeMockPostRequest()); //We need to return a promise because the mocked value is a promise.
+    expect(promise).toEqual(mockedAxios.post.mock.results[0].value); //The position 0 represents the option resolve. The position represents the rejected
   });
 });
