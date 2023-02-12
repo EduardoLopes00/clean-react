@@ -10,7 +10,30 @@ module.exports = {
     filename: "bundle.js",
   },
   resole: {
-    extensios: [".ts", ".tsx", ".js"],
+    extensios: [".ts", ".tsx", ".js", "scss"],
+  },
+  module: {
+    rules: [
+      {
+        test: /\.ts(x?)$/,
+        loader: "ts-loader",
+        exclude: /node_modules/,
+      },
+      {
+        test: /\.scss$/,
+        use: [
+          { loader: "style-loader" },
+          { loader: "sass-loader" },
+          {
+            loader: "css-loader",
+            options: {
+              modules: true,
+            },
+          },
+        ],
+        exclude: /node_modules/,
+      },
+    ],
   },
   devServer: {
     contentBase: "./public",
