@@ -15,5 +15,6 @@
         "@typescript-eslint/consistent-type-definition": "off",
         "@typescript-eslint/strict-boolean-expression": "off",
         "@typescript-eslint/prefer-interface": "off"
-    }
+    },
+    "ignorePatterns": ["webpack.config.js", "jest.config.js"]
 }
